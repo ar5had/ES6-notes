@@ -3,6 +3,7 @@ Simple ES6 notes from Aaron Frost.
 
 ## Content
 * Tail Recursion
+* Declarations
 
 ## Tail Recursion
 
@@ -72,7 +73,7 @@ It is not tail call because the function `factorial` has to do something after t
 
 JavaSript is GC'd language unlike the low level languages like `C` which uses `malloc` and `free` for memory management. Though Javascript has GC(garbage collection), ES5 or normal js that we use doesn't have tail call optimization so the performance of recursive function is pretty bad. Compiler doesn't take constant memory for such functions, but the memory consumption is increased linearly on each recursive call so eventually we get an `RangeError: Maximum call stack size exceeded`. 
 
->> ES6 brings this new feature of `Tail Call Optimization` which makes tail call work in the way they were supposed to work.
+>> ES6 brings this new feature of `Tail Call Optimization` which makes tail call work in the way they were supposed to work. Tail call will make the previous stack of function GC'd and all that is left in memory is the stack for tail call method.
 
 
 **Tail call but without Tail Call Optimization**
@@ -138,3 +139,128 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
 * Tail calls only work in strict mode
 * Any method whether recursive or not, can be benifited by this strategy of tail call but at the cost of ugliness that it broughts to your code
 * Tail calls are great but it removes the method from stack trace which makes code difficult for debugging.
+
+## Declarations
+
+### Context
+
+**Variable Hoisting**
+Pre-ES6 javascript is function scoped language and Hoisting is JavaScript's default behavior of moving all declarations to the top of the current scope (to the top of the current script or the current function). 
+
+
+Variable hoisted to Global Scope Example
+``` js
+  function outer() {
+    a = 0; // Error in 'strict' mode
+    function inner() {
+      b = 0; // Error in 'strict' mode
+    }
+    inner();
+  }
+  outer();
+```
+JS compiler thinks of the above code as this:
+``` js
+  var a = undefined; // hoisted to global scope
+  var b = undefined; // hoisted to global scope
+  function outer() {
+    a = 0;
+    function inner() {
+      b = 0;
+    }
+    inner();
+  }
+  outer();
+```
+ 
+Varaible in local blocks hoisted
+``` js
+  if(true) {
+    var a = 0;
+  }
+  function outer() {
+    if(true) {
+      var b = 0;
+    }
+  }
+  outer();
+```
+JS compiler thinks of the above code as this:
+``` js
+  var a = undefined;
+  if(true) {
+    a = 0;
+  }
+  function outer() {
+    var b = 0; // as es5 is function scoped
+    if(true) {
+      b = 0;
+    }
+  }
+  outer();
+```
+
+Another example of variable hoisting:
+``` js
+  console.log(name);
+  var name = "arshad";
+  console.log(name);
+```
+JS compiler thinks of the above code as this:
+``` js
+  var name = undefined;
+  console.log(name); // undefined
+  name = "arshad";
+  console.log(name); // arshad
+```
+
+**Function Hoisting**
+Functions are also hoisted like variables but there is a catch. Only functions that are created by `function declaration` are hoisted like variables but functions created by `function expression` are not hoisted.
+
+Simple example:
+``` js
+  isHoisted();
+  
+  // creating isHoisted by function declaration
+  function isHoisted() {
+    console.log("Yes!");
+  }
+```
+JS compiler thinks of the above code as this:
+``` js
+  function isHoisted() {
+    console.log("Yes!");
+  }
+  
+  isHoisted(); // Yes!
+```
+
+Example having both function declaration and function expression:
+
+``` js
+  // Outputs: "Definition hoisted!"
+  definitionHoisted();
+
+  // TypeError: undefined is not a function
+  definitionNotHoisted();
+
+  function definitionHoisted() {
+      console.log("Definition hoisted!");
+  }
+
+  var definitionNotHoisted = function () {
+      console.log("Definition not hoisted!");
+  };
+```
+
+
+
+
+
+
+
+
+
+
+
+
