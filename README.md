@@ -72,6 +72,8 @@ It is not tail call because the function `factorial` has to do something after t
 
 JavaSript is GC'd language unlike the low level languages like `C` which uses `malloc` and `free` for memory management. Though Javascript has GC(garbage collection), ES5 or normal js that we use doesn't have tail call optimization so the performance of recursive function is pretty bad. Compiler doesn't take constant memory for such functions, but the memory consumption is increased linearly on each recursive call so eventually we get an `RangeError: Maximum call stack size exceeded`. 
 
+>> ES6 brings this new feature of `Tail Call Optimization` which makes tail call work in the way they were supposed to work.
+
 
 **Tail call but without Tail Call Optimization**
 ``` js
@@ -88,7 +90,7 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
   // 49993 in mozilla
 ```
 
-**Fibbonacci Series with Tail Call in ES5**
+**Fibbonacci Series with Tail Call in ES5(don't have TCO)**
 ``` js
   function fib(x, y, limit, index){
     if(arguments.length === 1){
@@ -110,8 +112,9 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
 ```
 
 
-**Fibbonacci Series with Tail Call in ES6(Tail Call Optimisation)**
+**Fibbonacci Series with Tail Call in ES6(have TCO)**
 ``` js
+  // Same code as above
   function fib(x, y, limit, index){
     if(arguments.length === 1){
       if(x)
