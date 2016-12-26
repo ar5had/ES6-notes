@@ -2,6 +2,7 @@
 Simple ES6 notes from Aaron Frost.
 
 ## Content
+* Tail Recursion
 
 ## Tail Recursion
 
@@ -25,7 +26,7 @@ The nice thing is that if the compiler does not implements tail calls optimisati
 
 There was an hot debate on this subject in python community. Functional programmers asked for tail call, while others rejected it on the ground that the stack trace is too precious for debugging and that TCO implementation implied removing an explicit stack call and replacing it with a loop. The problem is that if we do such removal internally the function call becomes invisible in stack trace. Guido Von Rossum(python community member) decided there would be no TCO in Python  and that developpers should use loops or list comprehension instead. So avoid any O(n) recursion when programming python. O(log n) recursion for balanced trees or similar data structures is still fine TCO or no TCO.
 
-[source](https://www.quora.com/What-is-tail-recursion-Why-is-it-so-bad)
+[source for tail recursion definition](https://www.quora.com/What-is-tail-recursion-Why-is-it-so-bad)
 
 **Tail Position:** Last instruction to fire before the return statement. There can be multiple tail positions in a function.
 
@@ -69,14 +70,14 @@ It is not tail call because the function `factorial` has to do something after t
 ```
 ### Main Content
 
-ES5 or normal js that we use doesn't have tail call optimization so the performance of recursive function is pretty bad. Compiler doesn't take constant memory for such functions, but the memory consumption is increased linearly so eventually we get an `RangeError: Maximum call stack size exceeded`. 
+JavaSript is GC'd language unlike the low level languages like `C` which uses `malloc` and `free` for memory management. Though Javascript has GC(garbage collection), ES5 or normal js that we use doesn't have tail call optimization so the performance of recursive function is pretty bad. Compiler doesn't take constant memory for such functions, but the memory consumption is increased linearly on each recursive call so eventually we get an `RangeError: Maximum call stack size exceeded`. 
 
 
-**ES5**
+**Tail call but without Tail Call Optimization**
 ``` js
   function foo(num) {
     try {
-      return foo( (num || 0) + 1 );
+      return foo( (num || 0) + 1 ); // Tail Call
     } catch (e) {
       return num;
     }
@@ -87,4 +88,50 @@ ES5 or normal js that we use doesn't have tail call optimization so the performa
   // 49993 in mozilla
 ```
 
-**ES6**
+**Fibbonacci Series with Tail Call in ES5**
+``` js
+  function fib(x, y, limit, index){
+    if(arguments.length === 1){
+      if(x)
+        return fib(0, 1, x, 1);
+      else
+        return 0
+    }else{
+      if(index < limit)
+        return fib(y, (x + y), limit, ++index);
+      else
+        return y;
+    } 
+  }
+  
+  console.log(fib(3));     // 2
+  console.log(fib(5));     // 5
+  console.log(fib(13000)); // RangeError
+```
+
+
+**Fibbonacci Series with Tail Call in ES6(Tail Call Optimisation)**
+``` js
+  function fib(x, y, limit, index){
+    if(arguments.length === 1){
+      if(x)
+        return fib(0, 1, x, 1);
+      else
+        return 0
+    }else{
+      if(index < limit)
+        return fib(y, (x + y), limit, ++index);
+      else
+        return y;
+    } 
+  }
+  
+  console.log(fib(3));     // 2
+  console.log(fib(5));     // 5
+  console.log(fib(13000)); // A big no. equivalent to infinity, but no RangeError!
+```
+
+### Conclusion
+* Tail calls only work in strict mode
+* Any method whether recursive or not, can be benifited by this strategy of tail call but at the cost of ugliness that it broughts to your code
+* Tail calls are great but it removes the method from stack trace which makes code difficult for debugging.
