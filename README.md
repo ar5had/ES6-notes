@@ -604,7 +604,7 @@ For more, goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/W
 
 ## Arrow Functions
 
-An arrow function expression has a shorter syntax compared to function expressions and does not bind its own this, arguments, super, or new.target. Arrow functions are always anonymous. These function expressions are best suited for non-method functions and they can not be used as constructors. They improve performance.
+An arrow function expression has a shorter syntax compared to function expressions and does not bind its own this, arguments, super, or new.target. Arrow functions are always anonymous. These function expressions are best suited for non-method functions and they can not be used as constructors so don't use them for inheritance. They improve performance.
 
 In normal js or es5, every new function defined its own this value (a new object in case of a constructor, undefined in strict mode function calls, the context object if the function is called as an "object method", etc.). This proved to be annoying with an object-oriented style of programming.
 
@@ -687,6 +687,7 @@ Another important point is you can't rebind this in case of arrow function:
     this.id = 123;
 
       this.log = ()=>{
+        // this is lexically bound to parent this object
         console.log("ID:", this.id);
       }
 
@@ -696,7 +697,9 @@ Another important point is you can't rebind this in case of arrow function:
   }
 
   var pseudoObj = { id: 321 };
-  new Logger().old_log.call(pseudoObj); //123
+  
+  //Using call we are borrowing/stealing Logger's methods
+  new Logger().old_log.call(pseudoObj); // 123
   new Logger().log.call(pseudoObj); // 321
 
 ```
