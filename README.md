@@ -1,9 +1,10 @@
 # ES6-notes
-Simple ES6 notes from Aaron Frost.
+Simple ES6 notes.
 
 ## Content
 * Tail Recursion
 * Declarations
+* Rest Parameters
 
 ## Tail Recursion
 
@@ -296,9 +297,13 @@ Example for multiple declaration:
 Temporal Dead Zone Example:
 ``` js
   function foo() {
-    console.log(a); // Browser should log a RefereceError here because variable is being accessed in TDZ
+    // Browser should log a RefereceError here 
+    // because variable is being accessed in TDZ
+    console.log(a);
     let a = 1, 
-    console.log(a); // Even this console.log statement will give error as variable a can only be used after declaration line
+    // Even this console.log statement will give error as 
+    // variable 'a' can only be used after declaration line
+    console.log(a); 
   }
 ```
 In ECMAScript 6, accessing a let or const variable before its declaration (within its scope) causes a `ReferenceError`. The time span when that happens, between the creation of a variable’s binding and its declaration, is called the temporal dead zone.
@@ -340,9 +345,9 @@ Infamous closure problem:
       return i;
     }
   }
-
+  // [3, 3, 3] as each of anonymous function is bound to same variable
+  // i that is outside of the function in global scope
   console.log(a); 
-  // [3, 3, 3] as each of anonymous function is bound to same variable i that is outside of the function in global scope
 ```
 
 
@@ -354,10 +359,12 @@ In ES6:
       return i;
     }
   }
+  
+  // [0, 1, 2] as anonymous found is bound to a seperate 
+  // value on each iteration that is in for loop scope
 
   console.log(a); 
-  // [0, 1, 2] as anonymous found is bound to a seperate value on each iteration that is in for loop scope
-```
+ ```
 
 
 **CONST**
@@ -386,6 +393,72 @@ They are used to create temporal scopes for variables.
     }
   }
 ```
+
+
+## Rest Parameters
+The rest parameter syntax allows us to represent an indefinite number of arguments as an array.
+
+Syntax: `...args`
+
+**Difference between rest parameter and arguments object**
+* rest parameters are only the ones that haven't been given a separate name, while the arguments object contains all arguments passed to the function;
+* the arguments object is not a real array, while rest parameters are Array instances, meaning methods like sort, map, forEach or pop can be applied on it directly;
+* the arguments object has additional functionality specific to itself (like the callee property).
+
+
+Rest parameters have been introduced to reduce the boilerplate code that was induced by the arguments
+```js
+  // Before rest parameters, the following could be found:
+  function f(a, b){
+    var args = Array.prototype.slice.call(arguments, f.length);
+
+    // …
+  }
+
+  // to be equivalent of
+
+  function f(a, b, ...args) {
+
+  }
+```
+
+Rest parameters can be destructured, that means that their data can be extracted into distinct variables.
+``` js
+  function f(...[a, b, c]) {
+    return a + b + c;
+  }
+
+  f(1)          // NaN (b and c are undefined)
+  f(1, 2, 3)    // 6
+  f(1, 2, 3, 4) // 6 (the fourth parameter is not destructured)
+``` 
+
+**Rules for Rest Parameters**
+* One per function
+* Must be the last parameter
+* Can't use `arguments` in a function when using rest parameter
+* No default values
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
