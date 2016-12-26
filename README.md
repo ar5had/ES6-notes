@@ -7,6 +7,7 @@ Simple ES6 notes.
 * Rest Parameters
 * Spread Operators
 * Destructuring
+* Arrow Functions
 
 ## Tail Recursion
 
@@ -525,6 +526,8 @@ Advantages over old way of manual destructuring:
 * less LOC
 * inmethod signature
 
+**NOTE:** There is no performance improvement though.
+
 ``` js
   var a, b, rest;
   [a, b] = [1, 2];
@@ -591,25 +594,112 @@ Setting a function parameter's default value
 **Note:** 
 * In case of object destructuring the name of variables must be same as key of the object. You can set aliases in case you want different names.
 * Right side must be an array or object in case of array destructuring or object destructuring respectively.
-* In case the left hand side has a variable name that's not matching with any key on right side, then that variable will assigned `undefined`. There has been confusion about refutability patterns that can make distinction between `required` and `not-sure` v
-
-For more, must goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [Computed Property Name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names).
+* In case the left hand side has a variable name that's not matching with any key on right side, then that variable will assigned `undefined`. There has been confusion about refutability patterns that can make distinction between `required` and `optional` variables in destructuring but it looks like this feature is added by default into destructuring pattern.
 
 
-
+For more, goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [Computed Property Name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names).
 
 
 
 
+## Arrow Functions
+
+An arrow function expression has a shorter syntax compared to function expressions and does not bind its own this, arguments, super, or new.target. Arrow functions are always anonymous. These function expressions are best suited for non-method functions and they can not be used as constructors. They improve performance.
+
+In normal js or es5, every new function defined its own this value (a new object in case of a constructor, undefined in strict mode function calls, the context object if the function is called as an "object method", etc.). This proved to be annoying with an object-oriented style of programming.
+
+
+ES5 Way:
+``` js
+  function Person() {
+    // The Person() constructor defines `this` as an instance of itself.
+    this.age = 0;
+
+    setInterval(function growUp() {
+      // In non-strict mode, the growUp() function defines `this` 
+      // as the global object, which is different from the `this`
+      // defined by the Person() constructor.
+      this.age++;
+    }, 1000);
+  }
+
+  var p = new Person();
+```
+
+ES6 Way:
+``` js
+  function Person(){
+    this.age = 0;
+
+    setInterval(() => {
+      this.age++; // |this| properly refers to the person object
+    }, 1000);
+  }
+
+  var p = new Person();
+```
+
+**NOTE:** You cannot "rebind" an arrow function. It will always be called with the context in which it was defined. Just use a normal function.
+
+From the ECMASCRIPT-6 Spec:
+
+> Any reference to arguments, super, this, or new.target within an ArrowFunction must resolve to a binding in a lexically enclosing environment. Typically this will be the Function Environment of an immediately enclosing function.
 
 
 
+**Parenthesis-Parameter Rule**
+``` js
+  var x;           
+  x = () => {};    // No parameters, MUST HAVE PARENS
+  x = (val) => {}; // One parameter w/ parens, OPTIONAL 
+  x = val => {}    // One parameter w/o parens, OPTIONAL
+  x = (y,z) => {}; // Two or more parameters, MUST HAVE PARENS
+  x = y,z => {};   // Syntax Error: must wrap with parens when using multiple parameters
+```
 
+Some examples:
 
+``` js
+// implicit return: dont need curly braces and return keyword to wrap single line body
+var foo = () => "foo"; 
 
+// explicit return
+var doo = () => { return "foo's brother doo"; };
+```
 
+**Note:** Remember to wrap the object literal in parentheses:
+```js
+  var func = () => ({ foo: 1 });
+```
 
+There is no prototype of arrow functions but even then we get `function` on checking prototype and arrow function cant be used as constructor because of no local binding to `this` and no prototype. 
 
+``` js
+console.log( Object.getPrototypeOf(()=>{}) ); // function
+
+var Foo = () => {};
+new Foo(); // Foo is not a constructor
+```
+
+Another important point is you can't rebind this in case of arrow function:
+``` js
+  function Logger() {
+    this.id = 123;
+
+      this.log = ()=>{
+        console.log("ID:", this.id);
+      }
+
+      this.old_log = function() {
+        console.log("ID:", this.id);
+      }
+  }
+
+  var pseudoObj = { id: 321 };
+  new Logger().old_log.call(pseudoObj); //123
+  new Logger().log.call(pseudoObj); // 321
+
+```
 
 
 
