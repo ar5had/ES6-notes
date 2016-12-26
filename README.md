@@ -217,6 +217,7 @@ JS compiler thinks of the above code as this:
 **Function Hoisting**
 Functions are also hoisted like variables but there is a catch. Only functions that are created by `function declaration` are hoisted like variables but functions created by `function expression` are not hoisted.
 
+
 Simple example:
 ``` js
   isHoisted();
@@ -235,6 +236,7 @@ JS compiler thinks of the above code as this:
   isHoisted(); // Yes!
 ```
 
+
 Example having both function declaration and function expression:
 
 ``` js
@@ -243,15 +245,151 @@ Example having both function declaration and function expression:
 
   // TypeError: undefined is not a function
   definitionNotHoisted();
-
+  
+  // function declaration
   function definitionHoisted() {
       console.log("Definition hoisted!");
   }
 
+  // function expression
   var definitionNotHoisted = function () {
       console.log("Definition not hoisted!");
   };
 ```
+
+**Let**
+
+`let` is another keyword to create variables like `var` but the variables created have following different properties:
+* let variables can be reassigned
+* let variables can't be redeclared
+* let variables are supposed to reserve space in memory before their declaration so a TDZ(Temporal Dead Zone) is created which ables us to find errors when variable is used before its declaration. This feature is not implemented well in some of the browsers like Mozilla so instead of getting a `ReferenceError` on accessing let variables before their declaration, `0` or `undefined` is retrieved. 
+* let introduces block scoping
+
+
+Example for block scoping:
+``` js
+  let a = 0;
+  if(true) {
+    // block scoping
+    let a = 1;
+    let b = 2;
+    console.log(a,b); // 1, 2
+  }
+  console.log(a); // 0
+  console.log(a + b) // Error
+```
+
+
+Example for multiple declaration:
+``` js
+  let b = 0;
+  let b = 1; // Error: can't declare variable twice
+  
+  var a = 0;
+  let a = 1; // Error: can't declare variable twice
+  
+  var a = 0;
+  var a = 1; // No Error (even in strict mode) but dont do it
+```
+
+
+Temporal Dead Zone Example:
+``` js
+  function foo() {
+    console.log(a); // Browser should log a RefereceError here because variable is being accessed in TDZ
+    let a = 1, 
+    console.log(a); // Even this console.log statement will give error as variable a can only be used after declaration line
+  }
+```
+In ECMAScript 6, accessing a let or const variable before its declaration (within its scope) causes a `ReferenceError`. The time span when that happens, between the creation of a variable’s binding and its declaration, is called the temporal dead zone.
+
+
+**Let with Looping**
+Let variables declared in loops are only loop scoped, they cant be accessed after the loop. Let also brings down the infamous closure problem that will be shown in the examples below.
+
+
+Scoping in loops example:
+``` js
+  for (var i = 0; i < 5; i++) {
+    if (i > 3) {
+      var a = 'a';
+    }
+    console.log(i); // logs 1 - 4
+  }
+  
+  for (let j = 0; j < 5; j++) {
+    if (j > 3) {
+      var b = 'b';
+    }
+    console.log(j); // logs 1 - 4
+  }
+
+  console.log(a); // a
+  console.log(i); // 5
+  console.log(b); // ReferenceError
+  console.log(j); // ReferenceError
+  
+```
+
+Infamous closure problem:
+
+``` js
+  var a = [];
+  for(var i = 0; i < 3; i++) {
+    a[i] = function() {
+      return i;
+    }
+  }
+
+  console.log(a); 
+  // [3, 3, 3] as each of anonymous function is bound to same variable i that is outside of the function in global scope
+```
+
+
+In ES6:
+``` js
+  var a = [];
+  for(let i = 0; i < 3; i++) {
+    a[i] = function() {
+      return i;
+    }
+  }
+
+  console.log(a); 
+  // [0, 1, 2] as anonymous found is bound to a seperate value on each iteration that is in for loop scope
+```
+
+
+**CONST**
+`const` keyword is used to create constant variable(a perfect example of oxymoron). Here are the few properties that they have:
+
+* Can't be reassigned
+* Respects block scopes, like let
+* Can't be re-declared
+
+``` js
+  const a = 'a';
+  a = 'b'; // Error: const variable cant be reassigned
+```
+
+**Block Functions**
+They are used to create temporal scopes for variables.
+
+``` js
+  function foo() {
+    if (true) {
+      let a = 0; // temporal scope variable
+    }
+
+    { // Laydown new scope: Block Scope
+      let b = 0; // another way to create temporal scope
+    }
+  }
+```
+
+
+
+
 
 
 
