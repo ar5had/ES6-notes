@@ -8,6 +8,8 @@ Simple ES6 notes.
 * Spread Operators
 * Destructuring
 * Arrow Functions
+* Default Parameters
+* Classes
 
 ## Tail Recursion
 
@@ -681,7 +683,7 @@ var Foo = () => {};
 new Foo(); // Foo is not a constructor
 ```
 
-Another important point is you can't rebind this in case of arrow function:
+Another important point is that you can't rebind `this` in case of arrow function:
 ``` js
   function Logger() {
     this.id = 123;
@@ -692,6 +694,7 @@ Another important point is you can't rebind this in case of arrow function:
       }
 
       this.old_log = function() {
+        // this can be overwritten
         console.log("ID:", this.id);
       }
   }
@@ -704,16 +707,44 @@ Another important point is you can't rebind this in case of arrow function:
 
 ```
 
+A good example showing why we need **old function**
+
+``` js
+  var foo = {
+      // anonymous function this is bound to global this
+      log : ()=>{
+        this.speak();
+      },
+      old_log: function() {
+        this.speak();
+      },
+      speak : () => {
+        console.log("Hi");
+      }
+  }
+  
+  console.log(foo.log()); // Error
+  console.log(foo.old_log()); // Hi
+```
+
+Checkout [this](http://stackoverflow.com/questions/13441307/how-does-the-this-keyword-in-javascript-act-within-an-object-literal) answer for `this` role in object literal.
 
 
+## Default Parameters
+Default function parameters allow formal parameters to be initialized with default values if no value or undefined is passed. Errors will propogate if a method which throws error is called in default parameter assignment.
+
+Some points to remember:
+* Can't assign rest parameters a default value
+* Errors will propogate if a method which throws error is called in default parameter assignment
+* arguments object doesn't count default parameters, it counts only the no of parameters passed to a function. If you passed 2 arguments to a function having 100 default variables in a function, `arguments.length` will be `2`, not `100`.
+
+What triggers default parameters:
+* Empty string doesnt trigger default params. (falsy values except undefined doesnt trigger D.P.)
+* `undefined` triggers
+* Explicit `undefined` triggers
 
 
-
-
-
-
-
-
+## Classes
 
 
 
