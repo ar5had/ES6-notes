@@ -5,6 +5,8 @@ Simple ES6 notes.
 * Tail Recursion
 * Declarations
 * Rest Parameters
+* Spread Operators
+* Destructuring
 
 ## Tail Recursion
 
@@ -439,9 +441,159 @@ Rest parameters can be destructured, that means that their data can be extracted
 * Can't use `arguments` in a function when using rest parameter
 * No default values
 
+**Hack to create temporary scope variables in ES5**
+``` js
+  if (true) {
+    try {
+      throw "here is your funky variable";
+    } catch (e) {
+      e = "my temporary scope variable";
+      // code...
+    }
+  }
+```
+
+### Spread Operators
+
+The spread syntax allows an expression to be expanded in places where multiple arguments (for function calls) or multiple elements (for array literals) or multiple variables  (for destructuring assignment) are expected.
+
+**Note:** 
+* Spread operators are only for iterable objects.
+* Spread operators only go one level deep when used with arrays
+
+Syntax
+``` js
+  myFunction(...iterableObj);
+  For array literals:
+
+  [...iterableObj, 4, 5, 6]
+```
+Examples:
+``` js
+  function myFunction(x, y, z) { }
+  var args = [0, 1, 2];
+  myFunction.apply(null, args);
+  With ES2015 spread you can now write the above as:
+
+  function myFunction(x, y, z) { }
+  var args = [0, 1, 2];
+  myFunction(...args);
+```
+
+
+Any argument in the argument list can use the spread syntax and it can be used multiple times.
+``` js
+function myFunction(v, w, x, y, z) { }
+var args = [0, 1];
+myFunction(-1, ...args, 2, ...[3]);
+```
+
+
+Spread operator can create a more powerful array literal.
+
+Example: Without ES2015 spread, if you have an array and want to create a new array with the existing one being part of it, the array literal syntax is no longer sufficient and you have to fall back to imperative code, using a combination of push, splice, concat, etc. With spread syntax this becomes much more succinct:
+  
+```js
+  var parts = ['shoulders', 'knees'];
+  var lyrics = ['head', ...parts, 'and', 'toes']; // ["head", "shoulders", "knees", "and", "toes"]
+```
+
+Note: Typically the spread operators in ES2015 goes one level deep while copying an array. Therefore, they are unsuitable for copying multidimensional arrays. It's the same case with Object.assign() and Object spread operators. Look at the example below for a better understanding.
+
+
+``` js
+  var a =[[1], [2], [3]];
+  var b = [...a];
+  b.shift().shift();// a is now [[], [2], [3]]
+ ```
 
 
 
+Note that the spread operator can be applied only to iterable objects:
+``` js
+  var obj = {"key1":"value1"};
+  var array = [...obj]; // TypeError: obj is not iterable
+```
+
+
+### Destructuring
+The destructuring assignment syntax is a JavaScript expression that makes it possible to extract data from arrays or objects into distinct variables.
+
+Advantages over old way of manual destructuring:
+* it can have default values
+* more readable
+* less LOC
+* inmethod signature
+
+``` js
+  var a, b, rest;
+  [a, b] = [1, 2];
+  console.log(a); // 1
+  console.log(b); // 2
+
+  [a, b, ...rest] = [1, 2, 3, 4, 5];
+  console.log(a); // 1
+  console.log(b); // 2
+  console.log(rest); // [3, 4, 5]
+   
+  // puttin code in parenthesis to make it an expression that can be executed
+  ({a, b} = {a:1, b:2});
+  console.log(a); // 1
+  console.log(b); // 2
+  
+  // Adding aliases in case of object destructuring
+  // in this case a, b will be undefined or have their previous value
+  // but one, two will have 1, 2 value respectively
+  ({a: one, b: two} = {a: 1, b: 2});
+  
+  // inmethod signature
+  try {
+    throw "Error";
+  } catch({type, message, fileName, lineNumber}) {
+    // do somethin
+  }
+```
+
+
+Default Values example: 
+``` js
+Setting a function parameter's default value
+
+  //  ES5 version
+
+  function drawES5Chart(options) {
+    options = options === undefined ? {} : options;
+    var size = options.size === undefined ? 'big' : options.size;
+    var cords = options.cords === undefined ? { x: 0, y: 0 } : options.cords;
+    var radius = options.radius === undefined ? 25 : options.radius;
+    console.log(size, cords, radius);
+    // now finally do some chart drawing
+  }
+
+  drawES5Chart({
+    cords: { x: 18, y: 30 },
+    radius: 30
+  });
+  
+  //  ES6 version
+
+  function drawES6Chart({size = 'big', cords = { x: 0, y: 0 }, radius = 25} = {}) {
+    console.log(size, cords, radius);
+    // do some chart drawing
+  }
+
+  drawES6Chart({
+    cords: { x: 18, y: 30 },
+    radius: 30
+  });
+```
+
+**Note:** 
+* In case of object destructuring the name of variables must be same as key of the object. You can set aliases in case you want different names.
+* Right side must be an array or object in case of array destructuring or object destructuring respectively.
+* In case the left hand side has a variable name that's not matching with any key on right side, then that variable will assigned `undefined`. There has been confusion about refutability patterns that can make distinction between `required` and `not-sure` v
+
+For more, must goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [Computed Property Name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names).
 
 
 
