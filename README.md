@@ -11,6 +11,7 @@ Simple ES6 notes.
 - [Default Parameters](#default-parameters)
 - [Classes](#classes)
 - [Computed Properties](#computed-properties)
+- [Method Definitions](#method-definitions)
 
 ## Tail Recursion
 
@@ -1213,3 +1214,112 @@ For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/
 
 <sup>[(Back to table of contents)](#table-of-contents)</sup>
 
+
+## Method Definitions
+
+Starting with ECMAScript 2015 (ES6), a shorter syntax for method definitions on objects initializers is introduced. It is a shorthand for a function assigned to the method's name.
+
+Syntax
+``` js
+  var obj = {
+    property( parameters… ) {},
+    *generator( parameters… ) {},
+  // also with computed keys:
+    [property]( parameters… ) {},
+    *[generator]( parameters… ) {},
+  // compare ES5 getter/setter syntax:
+    get property() {},
+    set property(value) {}
+  };
+```
+Description
+The shorthand syntax is similar to the getter and setter syntax introduced in ECMAScript 2015.
+
+Given the following code:
+```js
+  var obj = {
+    foo: function() {
+      /* code */
+    },
+    bar: function() {
+      /* code */
+    }
+  };
+  You are now able to shorten this to:
+
+  var obj = {
+    foo() {
+      /* code */
+    },
+    bar() {
+      /* code */
+    }
+  };
+```
+**Note : **The shorthand syntax uses named function instead of anonymous functions (as in …foo: function() {}…). Named functions can be called from the function body (this is impossible for anonymous function as there is no identifier to refer to). For more details, see function.
+Shorthand generator methods
+
+Generator methods can be defined using the shorthand syntax as well. When using them,
+
+the asterisk (*) in the shorthand syntax must be before the generator property name. That is, * g(){} will work but g *(){} will not;
+non-generator method definitions may not contain the yield keyword. This means that legacy generator functions won't work either and will throw a SyntaxError. Always use yield in conjunction with the asterisk (*).
+``` js
+  // Using a named property (pre-ES6)
+  var obj2 = {
+    g: function*() {
+      var index = 0;
+      while(true)
+        yield index++;
+    }
+  };
+
+  // The same object using shorthand syntax
+  var obj2 = { 
+    * g() {
+      var index = 0;
+      while(true)
+        yield index++;
+    }
+  };
+
+  var it = obj2.g();
+  console.log(it.next().value); // 0
+  console.log(it.next().value); // 1
+ ```
+Method definitions are not constructable
+
+All method definitions are not constructors and will throw a TypeError if you try to instantiate them.
+```js
+  var obj = { 
+    method() {},
+  };
+  new obj.method; // TypeError: obj.method is not a constructor
+
+  var obj = { 
+    * g() {} 
+  };
+  new obj.g; // TypeError: obj.g is not a constructor (changed in ES2016)
+```
+Examples
+Simple test case
+```js
+  var obj = {
+    a : "foo",
+    b(){ return this.a; }
+  };
+  console.log(obj.b()); // "foo"
+
+  Computed property names
+
+  The shorthand syntax also supports computed property names.
+
+  var bar = {
+    foo0 : function (){return 0;},
+    foo1(){return 1;},
+    ["foo" + 2](){return 2;},
+  };
+
+  console.log(bar.foo0()); // 0
+  console.log(bar.foo1()); // 1
+  console.log(bar.foo2()); // 2
+```
