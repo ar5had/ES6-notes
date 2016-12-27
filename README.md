@@ -2,14 +2,15 @@
 Simple ES6 notes.
 
 ## Content
-* Tail Recursion
-* Declarations
-* Rest Parameters
-* Spread Operators
-* Destructuring
-* Arrow Functions
-* Default Parameters
-* Classes
+- [Tail Recursion](#Tail Recursion)
+- [Declarations](#Declarations)
+- [Rest Parameters](#Rest Parameters)
+- [Spread Operators](#Spread Operators)
+- [Destructuring](#Destructuring)
+- [Arrow Functions](#Arrow Functions)
+- [Default Parameters](#Default Parameters)
+- [Classes](#Classes)
+- [Computed Properties](#Computed Properties)
 
 ## Tail Recursion
 
@@ -747,6 +748,125 @@ What triggers default parameters:
 ## Classes
 JavaScript classes introduced in ECMAScript 6 are syntactical sugar over JavaScript's existing prototype-based inheritance. The class syntax is not introducing a new object-oriented inheritance model to JavaScript. JavaScript classes provide a much simpler and clearer syntax to create objects and deal with inheritance.
 
+Some points to note:
+* If there is a constructor present in sub-class, it needs to first call super() before using "this".
+* Keep in mind that getters/setters cannot have the same name as properties that you set in the constructor. You will end up exceeding the maximum call-stack with infinite recursion when you try to use the setter to set that same property. Example: set foo (value) { this.foo = value 
+* methods declared outside will be added to prototype object (prototype object is automatically created when declaring a class and assigned to all the instances of the class).
+
+``` js
+  class Dog {
+    // a method name 'constructor' that creates object with some properties
+    constructor(name, breed, power) {
+      this.name = name;
+      this.breed = breed;
+      this.power = power;
+    }
+    // method that object can call
+    // Prtotype method - WILL BE ADDED TO PROPTOTYPE Object
+    sayMyName () {
+      return this.name;
+    }
+    // static function or class function 
+    // that can only be called by class, not 
+    // by object
+    static bark() {
+      console.log("Woof Woof !!")
+    }
+    
+    
+    // Infinite loop - resuls to max stack size exceeded error
+    // get breed() {
+    //  return this.breed;
+    // }
+    
+    // health getter for an object
+    get health() {
+      return this.power > 20;
+    }
+    // health setter for an object
+    set health(newhealth) {
+      this.health = newhealth;
+    }
+  }
+  // The only way to create prototype data properties is by
+  // modifying the prototype outside of the declaration.
+  // WILL BE ADDED TO PROTOTYPE OBJECT
+  Dog.prototype.animalType = "mammals";
+ 
+  // Enumerable prototype methods can also be added 
+  // WILL BE ADDED TO PROTOTYPE OBJECT
+  Dog.prototype.sniff = function() { return "sniffin!!";};
+  
+  // Immutable properties can be added with defineProperty.
+  Object.defineProperty(Animal.prototype, 'lifeCycle', { value: '10-20 years' });
+  
+  //static/class properties can be added like this
+  Dog.isDomestic = true;
+```
+Must READ this page => https://reinteractive.com/posts/235-es6-classes-and-javascript-prototypes
+
+### Object.getPrototypeOf vs .prototype [Extra]
+``` js
+  var a = new Foo();
+  Object.getPrototypeOf( a ) === Foo.prototype; // true
+```
+When a is created by calling new Foo(), one of the things that happens is that a gets an internal [[Prototype]] link to the object that Foo.prototype is pointing at.
+
+## Private methods and Private properties
+Private properties can be created by weakmaps, namespace, symbols, closure, and an anti-pattern(encapsulation in constructor). For weakmaps, namespace, closure checkout this [MDN page](https://developer.mozilla.org/en-US/Add-ons/SDK/Guides/Contributor_s_Guide/Private_Properties)
+
+### Anti-Pattern or Enacapsulation in constructor
+``` js
+  class SomeClass{
+    constructor(){
+        //private property
+        let property="test";
+        //public getter
+        this.getProperty2=function(){
+            return property2;
+        }
+        //public getter
+        this.getProperty=function(){
+            return property;
+        }
+        //public setter
+        this.setProperty=function(prop){
+            property=prop;
+        }
+    }
+  }
+
+  var obj = new SomeClass();
+
+  console.log(obj.property);// undefined
+  console.log(obj.getProperty());// "test"
+  obj.setProperty('new test');
+  console.log(obj.getProperty());// "new test"
+```
+However, this will spawn each of these getters and setters on on each instace of `SomeClass` but they won't go on `SomeClass.prototype`.
+
+For more, goto this [page](http://www.zipcon.net/~swhite/docs/computers/languages/object_oriented_JS/methods.html).
+
+### Symbols 
+A symbol is a unique and immutable data type. It may be used as an identifier for object properties. The Symbol object is an implicit object wrapper for the symbol primitive data type.
+
+``` js
+  var property = Symbol();
+  class SomeClass {
+      constructor(){
+          this[property] = "test";
+      }
+  }
+
+  var obj = new SomeClass();
+
+  console.log(obj.property);
+```
+
+**NOTE**  Symbol doesn't imply any privacy as property easily can be got through `Object.getOwnPropertySymbols`.
+
+## Classes MDN Stuff 
+
 ### Defining classes
 Classes are in fact "special functions", and just as you can define function expressions and function declarations, the class syntax has two components: class expressions and class declarations.
 
@@ -789,14 +909,15 @@ A class expression is another way to define a class. Class expressions can be na
     }
   };
 ```
-Note: Class expressions also suffer from the same hoisting issues mentioned for Class declarations.
+**Note:** Class expressions also suffer from the same hoisting issues mentioned for Class declarations.
 
 Class body and method definitions
 The body of a class is the part that is in curly brackets {}. This is where you define class members, such as methods or constructors.
 
-Strict mode
-
-The bodies of class declarations and class expressions are executed in strict mode.
+> Strict mode
+>
+> The bodies of class declarations and class expressions are executed in strict mode(automatically).
+> Class definition and declaration are automatically compiled in strict mode.
 
 Constructor
 
@@ -911,7 +1032,7 @@ class Dog extends Animal {
 var d = new Dog('Mitzie');
 d.speak();
 ```
-If there is a constructor present in sub-class, it needs to first call super() before using "this".
+** If there is a constructor present in sub-class, it needs to first call super() before using "this".**
 
 One may also extend traditional function-based "classes":
 ``` js
@@ -960,6 +1081,7 @@ For example, when using methods such as map() that returns the default construct
 ``` js
   class MyArray extends Array {
     // Overwrite species to the parent Array constructor
+    // using computed properties that is a new feature in ES6
     static get [Symbol.species]() { return Array; }
   }
 
@@ -1006,8 +1128,35 @@ A class that uses these mix-ins can then be written like this:
 ``` js
   class Foo { }
   class Bar extends calculatorMixin(randomizerMixin(Foo)) { }
+  // calculatorMixin(randomizerMixin(Foo))
+  // calculatorMixin --> randomizerMixin --> Foo
+  // {calc: calc}
 ```
 
 
+## Computed Properties
+Starting with ECMAScript 2015, the object initializer syntax also supports computed property names. That allows you to put an expression in brackets [], that will be computed as the property name. This is symmetrical to the bracket notation of the property accessor syntax, which you might have used to read and set properties already. Now you can use the same syntax in object literals, too:
+``` js
+  // Computed property names (ES6)
+  var i = 0;
+  var a = {
+    ["foo" + ++i]: i,
+    ["foo" + ++i]: i,
+    ["foo" + ++i]: i
+  };
+
+  console.log(a.foo1); // 1
+  console.log(a.foo2); // 2
+  console.log(a.foo3); // 3
+
+  var param = 'size';
+  var config = {
+    [param]: 12,
+    ["mobile" + param.charAt(0).toUpperCase() + param.slice(1)]: 4
+  };
+
+  console.log(config); // { size: 12, mobileSize: 4 }
+```
+For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Object_initializer).
 
 
