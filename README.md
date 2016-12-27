@@ -2,15 +2,15 @@
 Simple ES6 notes.
 
 ## Content
-- [Tail Recursion](#Tail Recursion)
+- [Tail Recursion](#Tail-Recursion)
 - [Declarations](#Declarations)
-- [Rest Parameters](#Rest Parameters)
-- [Spread Operators](#Spread Operators)
+- [Rest Parameters](#Rest-Parameters)
+- [Spread Operators](#Spread-Operators)
 - [Destructuring](#Destructuring)
-- [Arrow Functions](#Arrow Functions)
-- [Default Parameters](#Default Parameters)
+- [Arrow Functions](#Arrow-Functions)
+- [Default Parameters](#Default-Parameters)
 - [Classes](#Classes)
-- [Computed Properties](#Computed Properties)
+- [Computed Properties](#Computed-Properties)
 
 ## Tail Recursion
 
@@ -146,6 +146,9 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
 * Tail calls only work in strict mode
 * Any method whether recursive or not, can be benifited by this strategy of tail call but at the cost of ugliness that it broughts to your code
 * Tail calls are great but it removes the method from stack trace which makes code difficult for debugging.
+
+
+<sup>[(Back to table of contents)](#Contents)</sup>
 
 ## Declarations
 
@@ -399,6 +402,7 @@ They are used to create temporal scopes for variables.
     }
   }
 ```
+<sup>[(Back to table of contents)](#contents)</sup>
 
 
 ## Rest Parameters
@@ -518,9 +522,10 @@ Note that the spread operator can be applied only to iterable objects:
   var obj = {"key1":"value1"};
   var array = [...obj]; // TypeError: obj is not iterable
 ```
+<sup>[(Back to table of contents)](#contents)</sup>
 
 
-### Destructuring
+## Destructuring
 The destructuring assignment syntax is a JavaScript expression that makes it possible to extract data from arrays or objects into distinct variables.
 
 Advantages over old way of manual destructuring:
@@ -603,6 +608,8 @@ Setting a function parameter's default value
 For more, goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [Computed Property Name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names).
 
 
+
+<sup>[(Back to table of contents)](#contents)</sup>
 
 
 ## Arrow Functions
@@ -731,6 +738,9 @@ A good example showing why we need **old function**
 Checkout [this](http://stackoverflow.com/questions/13441307/how-does-the-this-keyword-in-javascript-act-within-an-object-literal) answer for `this` role in object literal.
 
 
+<sup>[(Back to table of contents)](#contents)</sup>
+
+
 ## Default Parameters
 Default function parameters allow formal parameters to be initialized with default values if no value or undefined is passed. Errors will propogate if a method which throws error is called in default parameter assignment.
 
@@ -744,6 +754,8 @@ What triggers default parameters:
 * `undefined` triggers
 * Explicit `undefined` triggers
 
+
+<sup>[(Back to table of contents)](#contents)</sup>
 
 ## Classes
 JavaScript classes introduced in ECMAScript 6 are syntactical sugar over JavaScript's existing prototype-based inheritance. The class syntax is not introducing a new object-oriented inheritance model to JavaScript. JavaScript classes provide a much simpler and clearer syntax to create objects and deal with inheritance.
@@ -1133,6 +1145,8 @@ A class that uses these mix-ins can then be written like this:
   // {calc: calc}
 ```
 
+<sup>[(Back to table of contents)](#contents)</sup>
+
 
 ## Computed Properties
 Starting with ECMAScript 2015, the object initializer syntax also supports computed property names. That allows you to put an expression in brackets [], that will be computed as the property name. This is symmetrical to the bracket notation of the property accessor syntax, which you might have used to read and set properties already. Now you can use the same syntax in object literals, too:
@@ -1158,5 +1172,7 @@ Starting with ECMAScript 2015, the object initializer syntax also supports compu
   console.log(config); // { size: 12, mobileSize: 4 }
 ```
 For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Object_initializer).
+
+<sup>[(Back to table of contents)](#contents)</sup>
 
 
