@@ -460,7 +460,7 @@ Rest parameters can be destructured, that means that their data can be extracted
   }
 ```
 
-### Spread Operators
+## Spread Operators
 
 The spread syntax allows an expression to be expanded in places where multiple arguments (for function calls) or multiple elements (for array literals) or multiple variables  (for destructuring assignment) are expected.
 
@@ -521,6 +521,9 @@ Note that the spread operator can be applied only to iterable objects:
   var obj = {"key1":"value1"};
   var array = [...obj]; // TypeError: obj is not iterable
 ```
+
+**Lexical Scoping [Extra]:** 
+
 <sup>[(Back to table of contents)](#contents)</sup>
 
 
@@ -1143,11 +1146,48 @@ A class that uses these mix-ins can then be written like this:
 ```
 
 
+### Extend classes via Expression
+``` js
+  class a {
+    constructor() {
+        this.prop = 'a';
+      }
+
+  }
+
+  class b {
+    constructor() {
+        this.prop = 'b';
+      }
+
+  }
+
+  class c extends f() {
+    constructor() {
+        super();
+      }
+  }
+
+  function f() {
+    if (true)
+        return a;
+      else 
+        return b;
+  } 
+
+
+  var cc = new c();
+
+  console.log(cc.prop, cc instanceof a, cc instanceof b);
+  // logs "a, true, false"
+```
+
 <sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 
 ## Computed Properties
 Starting with ECMAScript 2015, the object initializer syntax also supports computed property names. That allows you to put an expression in brackets [], that will be computed as the property name. This is symmetrical to the bracket notation of the property accessor syntax, which you might have used to read and set properties already. Now you can use the same syntax in object literals, too:
+
 ``` js
   // Computed property names (ES6)
   var i = 0;
