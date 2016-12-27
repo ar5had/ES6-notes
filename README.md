@@ -148,7 +148,7 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
 * Tail calls are great but it removes the method from stack trace which makes code difficult for debugging.
 
 
-<sup>[(Back to table of contents)](#Contents)</sup>
+<sup>[(Back to table of contents)](#contents)</sup>
 
 ## Declarations
 
