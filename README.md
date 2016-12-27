@@ -1,7 +1,7 @@
 # ES6-notes
 Simple ES6 notes.
 
-## Content
+## Table of Contents
 - [Tail Recursion](#tail-recursion)
 - [Declarations](#declarations)
 - [Rest Parameters](#rest-parameters)
