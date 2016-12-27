@@ -2,15 +2,15 @@
 Simple ES6 notes.
 
 ## Content
-- [Tail Recursion](#Tail-Recursion)
-- [Declarations](#Declarations)
-- [Rest Parameters](#Rest-Parameters)
-- [Spread Operators](#Spread-Operators)
-- [Destructuring](#Destructuring)
-- [Arrow Functions](#Arrow-Functions)
-- [Default Parameters](#Default-Parameters)
-- [Classes](#Classes)
-- [Computed Properties](#Computed-Properties)
+- [Tail Recursion](#tail-recursion)
+- [Declarations](#declarations)
+- [Rest Parameters](#rest-parameters)
+- [Spread Operators](#spread-operators)
+- [Destructuring](#destructuring)
+- [Arrow Functions](#arrow-functions)
+- [Default Parameters](#default-parameters)
+- [Classes](#classes)
+- [Computed Properties](#computed-properties)
 
 ## Tail Recursion
 
