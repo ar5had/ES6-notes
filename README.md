@@ -148,7 +148,7 @@ JavaSript is GC'd language unlike the low level languages like `C` which uses `m
 * Tail calls are great but it removes the method from stack trace which makes code difficult for debugging.
 
 
-<sup>[(Back to table of contents)](#contents)</sup>
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 ## Declarations
 
@@ -402,8 +402,7 @@ They are used to create temporal scopes for variables.
     }
   }
 ```
-<sup>[(Back to table of contents)](#contents)</sup>
-
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 ## Rest Parameters
 The rest parameter syntax allows us to represent an indefinite number of arguments as an array.
@@ -608,9 +607,7 @@ Setting a function parameter's default value
 For more, goto [Destructuring syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) and [Computed Property Name](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names).
 
 
-
-<sup>[(Back to table of contents)](#contents)</sup>
-
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 ## Arrow Functions
 
@@ -754,8 +751,8 @@ What triggers default parameters:
 * `undefined` triggers
 * Explicit `undefined` triggers
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
-<sup>[(Back to table of contents)](#contents)</sup>
 
 ## Classes
 JavaScript classes introduced in ECMAScript 6 are syntactical sugar over JavaScript's existing prototype-based inheritance. The class syntax is not introducing a new object-oriented inheritance model to JavaScript. JavaScript classes provide a much simpler and clearer syntax to create objects and deal with inheritance.
@@ -1145,7 +1142,8 @@ A class that uses these mix-ins can then be written like this:
   // {calc: calc}
 ```
 
-<sup>[(Back to table of contents)](#contents)</sup>
+
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 
 ## Computed Properties
@@ -1173,6 +1171,5 @@ Starting with ECMAScript 2015, the object initializer syntax also supports compu
 ```
 For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Object_initializer).
 
-<sup>[(Back to table of contents)](#contents)</sup>
-
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
