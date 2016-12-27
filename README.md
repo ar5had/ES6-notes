@@ -745,8 +745,268 @@ What triggers default parameters:
 
 
 ## Classes
+JavaScript classes introduced in ECMAScript 6 are syntactical sugar over JavaScript's existing prototype-based inheritance. The class syntax is not introducing a new object-oriented inheritance model to JavaScript. JavaScript classes provide a much simpler and clearer syntax to create objects and deal with inheritance.
 
+### Defining classes
+Classes are in fact "special functions", and just as you can define function expressions and function declarations, the class syntax has two components: class expressions and class declarations.
 
+### Class declarations
+
+One way to define a class is using a class declaration. To declare a class, you use the class keyword with the name of the class ("Polygon" here).
+``` js
+  class Polygon {
+    constructor(height, width) {
+      this.height = height;
+      this.width = width;
+    }
+  }
+```
+### Hoisting
+
+An important difference between function declarations and class declarations is that function declarations are hoisted and class declarations are not. You first need to declare your class and then access it, otherwise code like the following will throw a ReferenceError:
+``` js
+  var p = new Polygon(); // ReferenceError
+
+  class Polygon {}
+```
+### Class expressions
+
+A class expression is another way to define a class. Class expressions can be named or unnamed. The name given to a named class expression is local to the class's body.
+```js
+  // unnamed
+  var Polygon = class {
+    constructor(height, width) {
+      this.height = height;
+      this.width = width;
+    }
+  };
+
+  // named
+  var Polygon = class Polygon {
+    constructor(height, width) {
+      this.height = height;
+      this.width = width;
+    }
+  };
+```
+Note: Class expressions also suffer from the same hoisting issues mentioned for Class declarations.
+
+Class body and method definitions
+The body of a class is the part that is in curly brackets {}. This is where you define class members, such as methods or constructors.
+
+Strict mode
+
+The bodies of class declarations and class expressions are executed in strict mode.
+
+Constructor
+
+The constructor method is a special method for creating and initializing an object created with a class. There can only be one special method with the name "constructor" in a class. A SyntaxError will be thrown if the class contains more than one occurrence of a constructor method.
+
+A constructor can use the super keyword to call the constructor of a parent class.
+
+**Prototype methods**
+
+See also method definitions.
+``` js
+  class Polygon {
+    constructor(height, width) {
+      this.height = height;
+      this.width = width;
+    }
+
+    get area() {
+      return this.calcArea();
+    }
+
+    calcArea() {
+      return this.height * this.width;
+    }
+  }
+
+  const square = new Polygon(10, 10);
+
+  console.log(square.area);
+```
+### Static methods
+
+The static keyword defines a static method for a class. Static methods are called without instantiating their class and are also not callable when the class is instantiated. Static methods are often used to create utility functions for an application.
+``` js
+  class Point {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+
+    static distance(a, b) {
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+
+      return Math.sqrt(dx*dx + dy*dy);
+    }
+  }
+
+  const p1 = new Point(5, 5);
+  const p2 = new Point(10, 10);
+
+  console.log(Point.distance(p1, p2));
+```
+### Boxing with prototype and static methods
+
+When a static or prototype method is called without an object valued "this" (or with "this" as boolean, string, number, undefined or null), then the "this" value will be undefined inside the called function. Autoboxing will not happen. The behaviour will be the same even if we write the code in non-strict mode.
+``` js
+  class Animal { 
+    speak() {
+      return this;
+    }
+    static eat() {
+      return this;
+    }
+  }
+
+  let obj = new Animal();
+  let speak = obj.speak;
+  speak(); // undefined
+
+  let eat = Animal.eat;
+  eat(); // undefined
+```
+If we write the above code using traditional function based classes, then autoboxing will happen based on the "this" value overwhich the function was called.
+```js
+  function Animal() { }
+
+  Animal.prototype.speak = function(){
+    return this;
+  }
+
+  Animal.eat = function() {
+    return this;
+  }
+
+  let obj = new Animal();
+  let speak = obj.speak;
+  speak(); // global object
+
+  let eat = Animal.eat;
+  eat(); // global object
+```
+### Sub classing with extends
+The extends keyword is used in class declarations or class expressions to create a class as a child of another class.
+``` js
+class Animal { 
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    console.log(this.name + ' makes a noise.');
+  }
+}
+
+class Dog extends Animal {
+  speak() {
+    console.log(this.name + ' barks.');
+  }
+}
+
+var d = new Dog('Mitzie');
+d.speak();
+```
+If there is a constructor present in sub-class, it needs to first call super() before using "this".
+
+One may also extend traditional function-based "classes":
+``` js
+function Animal (name) {
+  this.name = name;  
+}
+
+Animal.prototype.speak = function () {
+  console.log(this.name + ' makes a noise.');
+}
+
+class Dog extends Animal {
+  speak() {
+    console.log(this.name + ' barks.');
+  }
+}
+
+var d = new Dog('Mitzie');
+d.speak();
+```
+**Note** that classes cannot extend regular (non-constructible) objects. If you want to inherit from a regular object, you can instead use Object.setPrototypeOf():
+``` js
+  var Animal = {
+    speak() {
+      console.log(this.name + ' makes a noise.');
+    }
+  };
+  class Dog {
+    constructor(name) {
+      this.name = name;
+    }
+    speak() {
+      console.log(this.name + ' barks.');
+    }
+  }
+
+  Object.setPrototypeOf(Dog.prototype, Animal);
+
+  var d = new Dog('Mitzie');
+  d.speak();
+```
+Species
+You might want to return Array objects in your derived array class MyArray. The species pattern lets you override default constructors.
+
+For example, when using methods such as map() that returns the default constructor, you want these methods to return a parent Array object, instead of the MyArray object. The Symbol.species symbol lets you do this:
+``` js
+  class MyArray extends Array {
+    // Overwrite species to the parent Array constructor
+    static get [Symbol.species]() { return Array; }
+  }
+
+  var a = new MyArray(1,2,3);
+  var mapped = a.map(x => x * x);
+
+  console.log(mapped instanceof MyArray); // false
+  console.log(mapped instanceof Array);   // true
+```
+Super class calls with super
+The super keyword is used to call functions on an object's parent.
+```js
+  class Cat { 
+    constructor(name) {
+      this.name = name;
+    }
+
+    speak() {
+      console.log(this.name + ' makes a noise.');
+    }
+  }
+
+  class Lion extends Cat {
+    speak() {
+      super.speak();
+      console.log(this.name + ' roars.');
+    }
+  }
+```
+### Mix-ins
+Abstract subclasses or mix-ins are templates for classes. An ECMAScript class can only have a single superclass, so multiple inheritance from tooling classes, for example, is not possible. The functionality must be provided by the superclass.
+
+A function with a superclass as input and a subclass extending that superclass as output can be used to implement mix-ins in ECMAScript:
+``` js
+  var calculatorMixin = Base => class extends Base {
+    calc() { }
+  };
+
+  var randomizerMixin = Base => class extends Base {
+    randomize() { }
+  };
+```
+A class that uses these mix-ins can then be written like this:
+``` js
+  class Foo { }
+  class Bar extends calculatorMixin(randomizerMixin(Foo)) { }
+```
 
 
 
