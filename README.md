@@ -12,6 +12,11 @@ Simple ES6 notes.
 - [Classes](#classes)
 - [Computed Properties](#computed-properties)
 - [Method Definitions](#method-definitions)
+- [Collections](#collections)
+- [Modules](#modules)
+- [Promises](#promises)
+- [Generators](#generators)
+- [Template Literals](#template-literals)
 
 ## Tail Recursion
 
@@ -765,6 +770,9 @@ Some points to note:
 * If there is a constructor present in sub-class, it needs to first call super() before using "this".
 * Keep in mind that getters/setters cannot have the same name as properties that you set in the constructor. You will end up exceeding the maximum call-stack with infinite recursion when you try to use the setter to set that same property. Example: set foo (value) { this.foo = value 
 * methods declared outside will be added to prototype object (prototype object is automatically created when declaring a class and assigned to all the instances of the class).
+* if in a subclass, there is no constructor then `super` will be called automatically
+* class dont hoist so `runtime error` will be thrown to make an obj of class before defining it
+* new class syntx is just syntactical sugar.
 
 ``` js
   class Dog {
@@ -1323,3 +1331,389 @@ Simple test case
   console.log(bar.foo1()); // 1
   console.log(bar.foo2()); // 2
 ```
+
+## Collections
+
+### Set
+The Set object lets you store unique values of any type, whether primitive values or object references.
+
+#### Syntax
+new Set([iterable]);
+Parameters
+
+#### iterable
+If an iterable object is passed, all of its elements will be added to the new Set. null is treated as undefined.
+Description
+Set objects are collections of values. You can iterate through the elements of a set in insertion order. A value in the Set may only occur once; it is unique in the Set's collection.
+
+For iterable , goto this [page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of).
+
+**Imporant Point**
+#### Difference between for...of and for...in
+
+The for...in loop will iterate over all enumerable properties of an object.
+
+The for...of syntax is specific to collections, rather than all objects. It will iterate in this manner over the elements of any collection that has a [Symbol.iterator] property.
+
+The following example shows the difference between a for...of loop and a for...in loop.
+```js
+  Object.prototype.objCustom = function () {}; 
+  Array.prototype.arrCustom = function () {};
+
+  let iterable = [3, 5, 7];
+  iterable.foo = "hello";
+
+  for (let i in iterable) {
+    console.log(i); // logs 0, 1, 2, "foo", "arrCustom", "objCustom"
+  }
+
+  for (let i of iterable) {
+    console.log(i); // logs 3, 5, 7
+  }
+```
+
+
+#### Value equality
+
+Because each value in the Set has to be unique, the value equality will be checked. In an earlier version of ECMAScript specification this was not based on the same algorithm as the one used in the === operator. Specifically, for Sets, +0 (which is strictly equal to -0) and -0 were different values. However, this was changed in the ECMAScript 2015 specification. See "Value equality for -0 and 0" in the browser compatability table for details.
+
+Also, NaN and undefined can also be stored in a Set. **NaN is considered the same as NaN (even though NaN !== NaN)**.
+
+#### Properties
+Set.length
+The value of the length property is 0.
+get Set[@@species]
+The constructor function that is used to create derived objects.
+Set.prototype
+Represents the prototype for the Set constructor. Allows the addition of properties to all Set objects.
+Set instances
+All Set instances inherit from Set.prototype.
+
+#### Properties
+
+Set.prototype.constructor
+Returns the function that created an instance's prototype. This is the Set function by default.
+
+Set.prototype.size
+Returns the number of values in the Set object.
+
+#### Methods
+
+Set.prototype.add(value)
+Appends a new element with the given value to the Set object. Returns the Set object.
+
+Set.prototype.clear()
+Removes all elements from the Set object.
+
+Set.prototype.delete(value)
+Removes the element associated to the value and returns the value that Set.prototype.has(value) would have previously returned. Set.prototype.has(value) will return false afterwards.
+
+Set.prototype.entries()
+Returns a new Iterator object that contains an array of [value, value] for each element in the Set object, in insertion order. This is kept similar to the Map object, so that each entry has the same value for its key and value here.
+
+Set.prototype.forEach(callbackFn[, thisArg])
+Calls callbackFn once for each value present in the Set object, in insertion order. If a thisArg parameter is provided to forEach, it will be used as the this value for each callback.
+
+Set.prototype.has(value)
+Returns a boolean asserting whether an element is present with the given value in the Set object or not.
+
+Set.prototype.keys()
+Is the same function as the values() function and returns a new Iterator object that contains the values for each element in the Set object in insertion order.
+
+Set.prototype.values()
+Returns a new Iterator object that contains the values for each element in the Set object in insertion order.
+
+Set.prototype[@@iterator]()
+Returns a new Iterator object that contains the values for each element in the Set object in insertion order.
+
+``` js
+  mySet2 = new Set([1,2,3,4]);
+  mySet2.size; // 4
+  
+  // equivalent to Array.from(mySet2)
+  [...mySet2]; // [1,2,3,4]
+
+  console.log([...mySet2], Array.from(mySet2))
+  // logs same result
+```
+
+for examples on set, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Set);
+
+### Array.from 
+
+Look `Array.from` that can create array or iterable object from sets, string etc. The Array.from() method creates a new Array instance from an array-like or iterable object.
+
+Syntax
+`Array.from(arrayLike[, mapFn[, thisArg]])`
+Parameters
+
+#### arrayLike
+An array-like or iterable object to convert to an array.
+#### mapFn
+Optional. Map function to call on every element of the array.
+#### thisArg
+Optional. Value to use as this when executing mapFn.
+Return value
+
+A new Array instance.
+
+#### Description
+Array.from() lets you create Arrays from:
+
+array-like objects (objects with a length property and indexed elements) or
+iterable objects (objects where you can get its elements, such as Map and Set).
+
+``` js
+  // Using an arrow function as the map function to
+  // manipulate the elements
+  Array.from([1, 2, 3], x => x + x);      
+  // [2, 4, 6]
+
+
+  // Generate a sequence of numbers
+  Array.from({length: 5}, (v, k) => k);    
+  // [0, 1, 2, 3, 4]
+```
+
+For more goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/from).
+
+### Map
+The Map object is a simple key/value map. Any value (both objects and primitive values) may be used as either a key or a value.
+
+#### Syntax
+new Map([iterable])
+Parameters
+
+
+#### iterable
+Iterable is an Array or other iterable object whose elements are key-value pairs (2-element Arrays). Each key-value pair is added to the new Map. null is treated as undefined.
+Description
+A Map object iterates its elements in insertion order — a for...of loop returns an array of [key, value] for each iteration.
+
+It should be noted that a Map that is a map of an object, especially a dictionary of dictionaries, will only map to the object's insertion order -- which is random and not ordered.
+
+
+####  Difference between object and map
+``` js
+  var arr = [1,3];
+  var obj = {};
+  // arr will auto convert into string form by arr.toString() and then it will save.
+  obj[arr] = "asd";
+  var map = new Map();
+  // proper arr will be saved in map
+  map.set(arr, "asd");
+```
+Some points:
+
+* An Object has a prototype, so there are default keys in the map that could collide with your keys if you're not careful. This could be bypassed by using map = Object.create(null) since ES5, but was seldom done.
+* The keys of an Object are Strings and Symbols, whereas they can be any value for a Map, including functions, objects, and or any primitive.
+* You can get the size of a Map easily with the size property, while the size of an Object must be determined manually. 
+
+Properties
+Map.length
+The value of the length property is 0.
+get Map[@@species]
+The constructor function that is used to create derived objects.
+Map.prototype
+Represents the prototype for the Map constructor. Allows the addition of properties to all Map objects.
+Map instances
+All Map instances inherit from Map.prototype.
+
+Properties
+
+Map.prototype.constructor
+Returns the function that created an instance's prototype. This is the Map function by default.
+Map.prototype.size
+Returns the number of key/value pairs in the Map object.
+Methods
+
+
+#### Map.prototype.clear()
+Removes all key/value pairs from the Map object.
+
+#### Map.prototype.delete(key)
+Removes any value associated to the key and returns the value that Map.prototype.has(key) would have previously returned. Map.prototype.has(key) will return false afterwards.
+
+#### Map.prototype.entries()
+Returns a new Iterator object that contains an array of [key, value] for each element in the Map object in insertion order.
+
+#### Map.prototype.forEach(callbackFn[, thisArg])
+Calls callbackFn once for each key-value pair present in the Map object, in insertion order. If a thisArg parameter is provided to forEach, it will be used as the this value for each callback.
+
+#### Map.prototype.get(key)
+Returns the value associated to the key, or undefined if there is none.
+
+#### Map.prototype.has(key)
+Returns a boolean asserting whether a value has been associated to the key in the Map object or not.
+
+#### Map.prototype.keys()
+Returns a new Iterator object that contains the keys for each element in the Map object in insertion order.
+
+#### Map.prototype.set(key, value)
+Sets the value for the key in the Map object. Returns the Map object.
+
+#### Map.prototype.values()
+Returns a new Iterator object that contains the values for each element in the Map object in insertion order.
+
+#### Map.prototype[@@iterator]()
+Returns a new Iterator object that contains an array of [key, value] for each element in the Map object in insertion order.
+
+
+For examples goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Map).
+
+### WeakMaps
+
+The WeakMap object is a collection of key/value pairs in which the keys are weakly referenced.  The keys must be objects and the values can be arbitrary values.
+
+Syntax
+`new WeakMap([iterable])`
+
+#### Parameters
+
+#### iterable
+Iterable is an Array or other iterable object whose elements are key-value pairs (2-element Arrays). Each key-value pair will be added to the new WeakMap. null is treated as undefined.
+Description
+**Keys of WeakMaps are of the type Object only. Primitive data types as keys are not allowed (e.g. a Symbol can't be a WeakMap key).**
+
+### WeakMap Properties and differences
+* weak reference
+* cant be iterated
+* size cant be found coz of weak reference
+* keys can be primitive data type like Symbols etc, keys must be of type object
+
+### Why WeakMap?
+
+The experienced JavaScript programmer will notice that this API could be implemented in JavaScript with two arrays (one for keys, one for values) shared by the four API methods. Such an implementation would have two main inconveniences. The first one is an O(n) search (n being the number of keys in the map). The second one is a memory leak issue. With manually written maps, the array of keys would keep references to key objects, preventing them from being garbage collected. In native WeakMaps, references to key objects are held "weakly", which means that they do not prevent garbage collection in case there would be no other reference to the object.
+
+Because of references being weak, WeakMap keys are not enumerable (i.e. there is no method giving you a list of the keys). If they were, the list would depend on the state of garbage collection, introducing non-determinism. If you want to have a list of keys, you should use a Map.
+
+For more goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/WeakMap).
+
+## Template Literals
+Template literals are string literals allowing embedded expressions. You can use multi-line strings and string interpolation features with them. They were called "template strings" in prior editions of the ES2015 / ES6 specification.
+
+Template literals are enclosed by the back-tick (` `) (grave accent) character instead of double or single quotes. Template literals can contain place holders. These are indicated by the Dollar sign and curly braces (${expression}). The expressions in the place holders and the text between them get passed to a function. The default function just concatenates the parts into a single string. If there is an expression preceding the template literal (tag here),  the template string is called "tagged template literal". In that case, the tag expression (usually a function) gets called with the processed template literal, which you can then manipulate before outputting. To escape a back-tick in a template literal, put a backslash \ before the back-tick.
+
+
+## Modules
+
+
+## Promises
+
+
+## Generators
+
+
+#### Multi-line strings
+
+Any new line characters inserted in the source are part of the template literal. Using normal strings, you would have to use the following syntax in order to get multi-line strings:
+
+```js
+console.log("string text line 1\n"+
+"string text line 2");
+// "string text line 1
+// string text line 2"
+```
+
+To get the same effect with multi-line strings, you can now write:
+
+```js
+console.log(`string text line 1
+string text line 2`);
+// "string text line 1
+// string text line 2"
+```
+#### Expression interpolation
+
+In order to embed expressions within normal strings, you would use the following syntax:
+```js
+var a = 5;
+var b = 10;
+console.log("Fifteen is " + (a + b) + " and\nnot " + (2 * a + b) + ".");
+// "Fifteen is 15 and
+// not 20."
+```js
+
+Now, with template literals, you are able to make use of the syntactic sugar making substitutions like this more readable:
+``` js
+var a = 5;
+var b = 10;
+console.log(`Fifteen is ${a + b} and\nnot ${2 * a + b}.`);
+// "Fifteen is 15 and
+// not 20."
+```
+#### Tagged template literals
+
+A more advanced form of template literals are tagged template literals. With them you are able to modify the output of template literals using a function. The first argument contains an array of string literals ("Hello " , " world", and "" in this example). The second, and each argument after the first one, are the values of the processed (or sometimes called cooked) substitution expressions ("15" and "50" here). In the end, your function returns your manipulated string. There is nothing special about the name tag in the following example. The function name may be anything you want.
+``` js
+  var a = 5;
+  var b = 10;
+
+  function tag(strings, ...values) {
+    console.log(strings[0]); // "Hello "
+    console.log(strings[1]); // " world "
+    console.log(strings[2]); // ""
+    console.log(values[0]);  // 15
+    console.log(values[1]);  // 50
+
+    return "Bazinga!";
+  }
+
+  tag`Hello ${ a + b } world ${ a * b }`;
+  // "Bazinga!"
+```
+Tag functions don't need to return a string, as shown in the following example.
+
+
+#### Raw strings
+
+The special raw property, available on the first function argument of tagged template literals, allows you to access the raw strings as they were entered.
+
+function tag(strings, ...values) {
+  console.log(strings.raw[0]); 
+  // "string text line 1 \n string text line 2"
+}
+
+tag`string text line 1 \n string text line 2`;
+In addition, the String.raw() method exists to create raw strings just like the default template function and string concatenation would create.
+
+``` js
+  String.raw`Hi\n${2+3}!`;
+  // "Hi\n5!"
+
+```
+
+For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
