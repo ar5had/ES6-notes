@@ -1337,6 +1337,8 @@ Simple test case
   console.log(bar.foo2()); // 2
 ```
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
+
 ## Collections
 
 ### Set
@@ -1594,16 +1596,20 @@ Because of references being weak, WeakMap keys are not enumerable (i.e. there is
 
 For more goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/WeakMap).
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
+
 ## Modules
 
 Goto [import](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/import) and [export](https://developer.mozilla.org/en/docs/web/javascript/reference/statements/export).
 
 For more, goto this [page](http://www.2ality.com/2014/09/es6-modules-final.html).
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 ## Promises
 
 Goto [mdn-promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 ## Generators
 Generators make enable js code more cooperative.
 
@@ -1623,6 +1629,7 @@ Checkout MDN [page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 For more, goto this awesome (blog)[https://davidwalsh.name/es6-generators] by David Walsh.
 
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 ## Template Literals
 Template literals are string literals allowing embedded expressions. You can use multi-line strings and string interpolation features with them. They were called "template strings" in prior editions of the ES2015 / ES6 specification.
 
@@ -1709,11 +1716,14 @@ In addition, the String.raw() method exists to create raw strings just like the 
 
 For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals).
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
+
 ## Metaprogramming
 Symbols, Reflect and proxies are some new things added javascript that comes very handy. Goto this [page](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/) to read about metaprogramming in javascript.
 
 
 
+<sup>[(Back to table of contents)](#table-of-contents)</sup>
 
 
 
