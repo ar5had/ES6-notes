@@ -17,6 +17,7 @@ Simple ES6 notes.
 - [Promises](#promises)
 - [Generators](#generators)
 - [Template Literals](#template-literals)
+- [Metaprogramming](#metaprogramming)
 
 ## Tail Recursion
 
@@ -773,6 +774,7 @@ Some points to note:
 * if in a subclass, there is no constructor then `super` will be called automatically
 * class dont hoist so `runtime error` will be thrown to make an obj of class before defining it
 * new class syntx is just syntactical sugar.
+* prototype methods inside class will not be added to prototype
 
 ``` js
   class Dog {
@@ -783,7 +785,9 @@ Some points to note:
       this.power = power;
     }
     // method that object can call
-    // Prtotype method - WILL BE ADDED TO PROPTOTYPE Object
+    // Non-enumerable Prtotype method - It is called prototype method but it will not be seen in 
+    // prototype
+    // Strange !
     sayMyName () {
       return this.name;
     }
@@ -811,11 +815,12 @@ Some points to note:
   }
   // The only way to create prototype data properties is by
   // modifying the prototype outside of the declaration.
-  // WILL BE ADDED TO PROTOTYPE OBJECT
+  // WILL BE ADDED TO PROTOTYPE OBJECT...
   Dog.prototype.animalType = "mammals";
  
   // Enumerable prototype methods can also be added 
   // WILL BE ADDED TO PROTOTYPE OBJECT
+  // Enumerable prototype method
   Dog.prototype.sniff = function() { return "sniffin!!";};
   
   // Immutable properties can be added with defineProperty.
@@ -1597,12 +1602,31 @@ Template literals are enclosed by the back-tick (` `) (grave accent) character i
 
 ## Modules
 
+Goto [import](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/import) and [export](https://developer.mozilla.org/en/docs/web/javascript/reference/statements/export).
+
+For more, goto this [page](http://www.2ality.com/2014/09/es6-modules-final.html).
 
 ## Promises
 
+Goto [mdn-promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 ## Generators
+Generators make enable js code more cooperative.
 
+
+Syntax:
+``` js
+function *three() {
+  yield 1;
+  ...
+}
+
+three();// generator iterator 
+```
+
+Checkout MDN [page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and [this](https://app.pluralsight.com/player?course=js-next-es6&author=aaron-frost&name=js-next-es6-m5&clip=3&mode=live) video. 
+ 
+For more, goto this awesome (blog)[https://davidwalsh.name/es6-generators] by David Walsh.
 
 #### Multi-line strings
 
@@ -1685,7 +1709,8 @@ In addition, the String.raw() method exists to create raw strings just like the 
 
 For more, goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals).
 
-
+## Metaprogramming
+Symbols, Reflect and proxies are some new things added javascript that comes very handy. Goto this [page](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/) to read about metaprogramming in javascript.
 
 
 
