@@ -1594,12 +1594,6 @@ Because of references being weak, WeakMap keys are not enumerable (i.e. there is
 
 For more goto this [page](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/WeakMap).
 
-## Template Literals
-Template literals are string literals allowing embedded expressions. You can use multi-line strings and string interpolation features with them. They were called "template strings" in prior editions of the ES2015 / ES6 specification.
-
-Template literals are enclosed by the back-tick (` `) (grave accent) character instead of double or single quotes. Template literals can contain place holders. These are indicated by the Dollar sign and curly braces (${expression}). The expressions in the place holders and the text between them get passed to a function. The default function just concatenates the parts into a single string. If there is an expression preceding the template literal (tag here),  the template string is called "tagged template literal". In that case, the tag expression (usually a function) gets called with the processed template literal, which you can then manipulate before outputting. To escape a back-tick in a template literal, put a backslash \ before the back-tick.
-
-
 ## Modules
 
 Goto [import](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Statements/import) and [export](https://developer.mozilla.org/en/docs/web/javascript/reference/statements/export).
@@ -1627,6 +1621,12 @@ three();// generator iterator
 Checkout MDN [page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and [this](https://app.pluralsight.com/player?course=js-next-es6&author=aaron-frost&name=js-next-es6-m5&clip=3&mode=live) video. 
  
 For more, goto this awesome (blog)[https://davidwalsh.name/es6-generators] by David Walsh.
+
+
+## Template Literals
+Template literals are string literals allowing embedded expressions. You can use multi-line strings and string interpolation features with them. They were called "template strings" in prior editions of the ES2015 / ES6 specification.
+
+Template literals are enclosed by the back-tick (` `) (grave accent) character instead of double or single quotes. Template literals can contain place holders. These are indicated by the Dollar sign and curly braces (${expression}). The expressions in the place holders and the text between them get passed to a function. The default function just concatenates the parts into a single string. If there is an expression preceding the template literal (tag here),  the template string is called "tagged template literal". In that case, the tag expression (usually a function) gets called with the processed template literal, which you can then manipulate before outputting. To escape a back-tick in a template literal, put a backslash \ before the back-tick.
 
 #### Multi-line strings
 
